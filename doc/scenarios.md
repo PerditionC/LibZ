@@ -123,7 +123,7 @@ static int Main(string[] args)
     });
 }
 ```
-You will still need to build containers, though but they won't be injected into main assembly.
+You will still need to build containers, though but they won't be injected into main assembly.  This scenario is useful for ClickOnce installations or others where you can not modify the assembly after the build without adjusting the manifest's hashes.  Note that the class with performing the RegisterFileContainer(...) calls should not have any field or otherwise use Types until the assemblies can be resolved; the program will fail with a not found exception.  Either move the fields to another class that is used after registering the container with the Type or use another scenario with instrumentation (performs the registration very early in the startup process). 
 
 ## Scenario 7: Using LibZ containers as MEF catalogs
 When putting all the assemblies into .libz files you lose ability to use ```DirectoryCatalog```. To give you ability to discover extensions hidden inside .libz files LibZResolver implements three methods: ```LibZResolver.GetCatalog(Guid)```, ```LibZResolver.GetCatalogs(IEnumerable<Guid>)``` and ```LibZResolver.GetAllCatalogs()```. All calls to ```LibZResolver.RegisterXXX``` return a ```Guid``` or ```IEnumerable<Guid>```. By calling ```LibZResolver.GetCatalog(Guid)``` you can retrieve the catalogue for given container file.
